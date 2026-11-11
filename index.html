@@ -394,6 +394,7 @@ footer.foot p + p { margin-top: 8px; }
 .stages li.now::before { border-color: var(--ours); animation: pulse 1.6s ease-in-out infinite; }
 .stages b { color: var(--ink); font-weight: 600; }
 .num.pending { color: var(--ink-3); }
+.sw.spread { width: 18px; height: 10px; border-radius: 2px; background: color-mix(in srgb, var(--base) 26%, transparent); }
 @media (prefers-reduced-motion: reduce) { .stages li.now::before { animation: none; } }
 @media (max-width: 960px) {
   .pipe { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -660,7 +661,7 @@ footer.foot p + p { margin-top: 8px; }
       <li><time datetime="2026-11-05">5 Nov</time><div><h3>Fine-tuning on real cases: best model so far</h3><p>The refinement model, fine-tuned on the 82 working cases, reached 6.7 and 6.5 mm on the 88 sealed ones, 0.59 mm better in both runs (Route 17).</p></div><span class="tag result">Result</span></li>
       <li><time datetime="2026-11-06">6 Nov</time><div><h3>Not just more training</h3><p>Given three times the training, a model from scratch still trailed the pretrained model trained just as long by 0.7 mm, and only tied one trained a third as long (Route 18).</p></div><span class="tag result">Result</span></li>
       <li><time datetime="2026-11-10">10 Nov</time><div><h3>More people, or a bigger model?</h3><p>Practising on more people helped fractures but not ribs. A model about eight times larger helped neither, and no general model reached the rib specialist (Route 19).</p></div><span class="tag mixed">Mixed</span></li>
-      <li><time datetime="2026-11-10">10 Nov</time><div><h3>Bones only, or bones plus soft tissue?</h3><p>Four new encoders trained, their rib runs scored once on the sealed test, fracture runs under way in the cloud. No verdict yet (Route 21).</p></div><span class="tag running">Running</span></li>
+      <li><time datetime="2026-11-10">10 Nov</time><div><h3>Bones only, or bones plus soft tissue?</h3><p>Adding organs, vessels and back muscles to practice helped neither ribs nor fractures, and did not clearly hurt them (Route 21).</p></div><span class="tag ruled">Ruled out</span></li>
       <li><time datetime="2026-11-10">10 Nov</time><div><h3>A harder practice task, and gentler fine-tuning</h3><p>Rebuilding whole hidden bones as well as patches (Route 20), and lower fine-tuning rates for the large model (Route 22). Both running on the laptop.</p></div><span class="tag running">Running</span></li>
       <li><time datetime="2026-11-10">Next</time><div><h3>A pelvis top-up for the general model</h3><p>Approved, to start after Route 22: a short extra round of practice on pelvis scans, to see whether the general model can catch the pelvis specialist (Route 23).</p></div><span class="tag queued">Approved</span></li>
     </ol>
@@ -672,7 +673,7 @@ footer.foot p + p { margin-top: 8px; }
     <div class="head prose">
       <p class="eyebrow">Evidence</p>
       <h2 id="evidence-title">What the results show.</h2>
-      <p class="lead">Six findings carry the case, newest first. Each was tested against a control chosen to catch wishful thinking, and each is shown here with its numbers and its spread across independent runs.</p>
+      <p class="lead">Seven findings carry the case, recent ones first. Each was tested against a control chosen to catch wishful thinking, and each is shown here with its numbers and its spread across independent runs.</p>
     </div>
 
     <article class="proof" aria-labelledby="p0">
@@ -781,21 +782,47 @@ footer.foot p + p { margin-top: 8px; }
 
     <article class="proof" aria-labelledby="p21">
       <div class="proof-head">
-        <h3 id="p21">In progress: does practising on soft tissue as well as bone help?</h3>
-        <div><div class="num pending">Pending</div><div class="num-d">no verdict yet. It is written once the fracture runs are scored, and shown here only then.</div></div>
+        <h3 id="p21">Practising on soft tissue as well as bone did not help the bone tasks.</h3>
+        <div><div class="num">No gain</div><div class="num-d">on ribs or on fractures from adding organs, vessels and back muscles to practice. Not shown to hurt them either.</div></div>
+      </div>
+      <div class="figs2">
+        <figure class="fig">
+          <div class="fig-t">Rib labelling from 10 cases, sealed test of 160</div>
+          <div class="fig-s">Change in Label Dice when soft tissue joins the bones in practice. One row per pairing of practice run and fine-tuning run.</div>
+          <div class="chart" id="c-r21r"></div>
+        </figure>
+        <figure class="fig">
+          <div class="fig-t">Fracture reduction, 82 working cases</div>
+          <div class="fig-s">Change in mean fragment error, mm; right of zero means less error with soft tissue. Working cases, as the pre-registration set out; the 88 sealed cases were not used.</div>
+          <div class="chart" id="c-r21f"></div>
+          <div class="legend"><span><i class="sw ours"></i>One pairing, with its 95% interval</span><span><i class="sw spread"></i>Run-to-run spread: how far two identical practice runs differ</span></div>
+        </figure>
       </div>
       <div class="proof-body">
         <div class="prose">
-          <p>Route 21 trains two kinds of encoder on the same people: bones only, or bones plus organs, vessels and back muscles. Two practice runs of each. All four are then fine-tuned on ribs and on fractures.</p>
-          <p class="muted">A lung-lobe task was planned too. It was withdrawn on 9 November, before any encoder was trained, when a pre-set check found it could not tell encoders apart well enough. Its 100 sealed lung scans stay unopened.</p>
+          <p>Route 21 trained two kinds of encoder on the same 724 or so people: bones only, or bones plus organs, vessels and back muscles. Each kind was trained twice and fine-tuned twice per task, giving four pairings per task.</p>
+          <p><b>Ribs:</b> the soft-tissue encoder was a hair behind in all four pairings, by 0.0003 to 0.020, no more than two identical practice runs differ. <b>Fractures:</b> it was about 0.17 mm ahead in three pairings and 0.31 mm behind in the fourth. Neither result meets the pre-registered bar for a yes, and neither counts as a reversal.</p>
+          <p class="muted">At this scale, a 4.9 M-parameter encoder and about 724 people, variety in practice does not improve these two bone tasks. It is not shown to harm them either, although the soft-tissue encoder saw about a third as many bone points per update. The lung-lobe questions were withdrawn on 9 November, so this says nothing yet about tasks on soft tissue itself.</p>
         </div>
-        <ol class="stages" aria-label="Route 21 progress">
-          <li class="done"><span><b>Four encoders trained</b> and checked · 10 Nov</span></li>
-          <li class="done"><span><b>16 rib runs</b> fine-tuned, then scored once on the sealed rib test · 10 Nov</span></li>
-          <li class="now"><span><b>Fracture runs</b> in the cloud · started 10 Nov</span></li>
-          <li><span><b>Verdict</b> on ribs and fractures together</span></li>
-        </ol>
+        <div>
+          <ol class="stages" aria-label="Route 21 answers">
+            <li class="done"><span><b>Ribs: no.</b> Behind in 4 of 4 pairings, all within the run-to-run spread of 0.020 · sealed test, scored once</span></li>
+            <li class="done"><span><b>Fractures: no.</b> Ahead in 3 pairings, behind in 1; the spread is 0.27 mm · working cases</span></li>
+            <li class="done"><span><b>Beside, no rule:</b> at 50 rib cases the two encoders tie, −0.009 to +0.009</span></li>
+            <li><span><b>Lung-lobe questions withdrawn</b> on 9 November, before any training, when a pre-set check found the task could not tell encoders apart. Its 100 sealed lung scans stay unopened.</span></li>
+          </ol>
+          <details class="nums"><summary>Show the numbers</summary><div class="scroll"><table>
+            <thead><tr><th>Pairing (practice · fine-tune)</th><th class="n">Ribs, change [95%]</th><th class="n">Fractures, mm [95%]</th></tr></thead>
+            <tbody>
+              <tr><td>Run 1 · run 1</td><td class="n">−0.020 [−0.029, −0.011]</td><td class="n">+0.17 [+0.03, +0.31]</td></tr>
+              <tr><td>Run 1 · run 2</td><td class="n">−0.010 [−0.019, −0.001]</td><td class="n">+0.17 [+0.04, +0.30]</td></tr>
+              <tr><td>Run 2 · run 1</td><td class="n">−0.0003 [−0.007, +0.006]</td><td class="n">−0.31 [−0.49, −0.12]</td></tr>
+              <tr><td>Run 2 · run 2</td><td class="n">−0.012 [−0.024, −0.0003]</td><td class="n">+0.16 [−0.003, +0.32]</td></tr>
+            </tbody></table>
+            <p class="muted" style="font-size:13px;margin-top:8px">Positive favours soft tissue. Rib Label Dice at 10 cases, in the order above: bones only 0.861 / 0.847 / 0.841 / 0.839, with soft tissue 0.841 / 0.837 / 0.840 / 0.827. Fracture error on the working cases, mm: bones only 8.47 / 8.69 / 8.20 / 8.61, with soft tissue 8.30 / 8.53 / 8.51 / 8.46.</p></div></details>
+        </div>
       </div>
+      <p class="test"><b>How it was tested</b>Pre-registered (Route 21), verdict 10 November. A yes needed every pairing’s 95% interval above zero and the smallest gain larger than the run-to-run spread, measured from this route’s own repeat runs before either question was read. Ribs were scored once on the sealed rib test; fractures on the 82 working cases only. As a check, the bones-only encoder matched the earlier 914-person model X1 on ribs (+0.001 and −0.007), so the new training setup reproduces the old result.</p>
     </article>
 
     <article class="proof" aria-labelledby="p1">
@@ -1000,7 +1027,7 @@ footer.foot p + p { margin-top: 8px; }
         <li><b>Research stage.</b> Nothing here is a clinical claim, and MedSpatial is not a medical device.</li>
         <li><b>Not yet the most accurate.</b> The best published fracture systems still have lower error. They are scored on a different, hidden test set and train on the real cases we keep for testing, so the numbers do not compare directly.</li>
         <li><b>Two anatomies so far.</b> Pretraining has helped pelvic fractures and rib labelling, even when the model never saw either. A general model still trails the specialists pretrained on ribs or pelves.</li>
-        <li><b>Bigger is not better yet.</b> A model about eight times larger improved neither task. Practising on more people helped fractures but not ribs.</li>
+        <li><b>Bigger is not better yet, nor broader.</b> A model about eight times larger improved neither task, and adding soft tissue to practice did not help the bone tasks. Practising on more people helped fractures but not ribs.</li>
         <li><b>Small fragments are the frontier.</b> The model improves every size of fragment, but the smallest pieces still carry the most error.</li>
       </ul>
     </div>
@@ -1466,6 +1493,48 @@ const PELVIS = {"p":[79,0,81,-62,-37,-113,-131,13,63,89,-24,-75,-25,-57,14,-2,64
     xs: ['4.9 M', '14.6 M', '38.5 M'], names: ['4.9 M (X1)', '14.6 M', '38.5 M (L)'],
     vals: [[8.521, 8.363], null, [8.901, 8.450]],
   })));
+
+  /* Route 21: gain from adding soft tissue, one row per pairing; the run-to-run spread is a band around zero */
+  function vgain(host, w, bind, cfg) {
+    const rowH = 48, top = 30, bottom = 30;
+    const H = top + cfg.rows.length * rowH + bottom;
+    const svg = svgFor(host, w, H, cfg.label);
+    const x0 = 8, x1 = w - 72, sp = cfg.spread;
+    const X = v => x0 + (v - cfg.min) / (cfg.max - cfg.min) * (x1 - x0);
+    const band = S('rect', { x: X(-sp), y: top - 6, width: X(sp) - X(-sp), height: H - top - bottom + 8, rx: 3, class: 'm-base', 'fill-opacity': 0.16 }, svg);
+    bind(band, `Run-to-run spread: <b>±${cfg.fmt(sp).slice(1)}</b><br>two identical practice runs differ by up to this much`);
+    (w < 420 ? cfg.ticksNarrow : cfg.ticks).forEach(v => {
+      if (v !== 0) S('line', { x1: X(v), x2: X(v), y1: top - 6, y2: H - bottom + 2, class: 'gridline' }, svg);
+      T(svg, X(v), H - 8, cfg.tick(v), 't-num t-axis', 'middle');
+    });
+    S('line', { x1: X(0), x2: X(0), y1: top - 6, y2: H - bottom + 2, class: 's-base', 'stroke-width': 1.5, 'stroke-dasharray': '4 4' }, svg);
+    T(svg, x0, top - 14, '← soft tissue hurt', 't-axis', 'start');
+    T(svg, x1, top - 14, 'soft tissue helped →', 't-axis', 'end');
+    cfg.rows.forEach(([n, g, lo, hi], i) => {
+      const y = top + i * rowH, cy = y + 32;
+      T(svg, x0, y + 13, n, 't-ink t-small');
+      S('line', { x1: X(lo), x2: X(hi), y1: cy, y2: cy, class: 's-ink', 'stroke-width': 1.5 }, svg);
+      [lo, hi].forEach(v => S('line', { x1: X(v), x2: X(v), y1: cy - 5, y2: cy + 5, class: 's-ink', 'stroke-width': 1.5 }, svg));
+      S('circle', { cx: X(g), cy, r: 8.5, class: 'm-surface' }, svg);
+      const d = S('circle', { cx: X(g), cy, r: 6.5, class: 'm-ours' }, svg);
+      T(svg, w - 4, cy + 4.5, cfg.fmt(g), 't-num t-ink', 'end');
+      bind(d, `${n}: <b>${cfg.fmt(g)}</b><br>95% interval ${cfg.fmt(lo)} to ${cfg.fmt(hi)}<br>${cfg.note}`);
+    });
+  }
+  const sgn = (v, d) => (v >= 0 ? '+' : '−') + Math.abs(v).toFixed(d);
+  const R21ROWS = ['Practice run 1 · fine-tune run 1', 'Practice run 1 · fine-tune run 2', 'Practice run 2 · fine-tune run 1', 'Practice run 2 · fine-tune run 2'];
+  mount('c-r21r', (host, w, bind) => vgain(host, w, bind, {
+    label: 'Change in rib Label Dice from adding soft tissue to practice, four pairings with 95% intervals, against the run-to-run spread',
+    min: -0.036, max: 0.036, spread: 0.01981, ticks: [-0.03, -0.02, -0.01, 0, 0.01, 0.02, 0.03], ticksNarrow: [-0.02, 0, 0.02],
+    tick: v => v === 0 ? '0' : sgn(v, 2), fmt: v => sgn(v, Math.abs(v) < 0.001 ? 4 : 3), note: 'positive: better rib overlap with soft tissue',
+    rows: [[-0.01978, -0.02927, -0.01060], [-0.00963, -0.01860, -0.00053], [-0.00025, -0.00670, 0.00615], [-0.01174, -0.02378, -0.00034]].map((r, i) => [R21ROWS[i], ...r]),
+  }));
+  mount('c-r21f', (host, w, bind) => vgain(host, w, bind, {
+    label: 'Change in fracture error from adding soft tissue to practice, four pairings with 95% intervals, against the run-to-run spread',
+    min: -0.6, max: 0.6, spread: 0.27180, ticks: [-0.4, -0.2, 0, 0.2, 0.4], ticksNarrow: [-0.4, 0, 0.4],
+    tick: v => v === 0 ? '0' : sgn(v, 1), fmt: v => sgn(v, Math.abs(v) < 0.01 ? 3 : 2) + ' mm', note: 'positive: less fracture error with soft tissue',
+    rows: [[0.16864, 0.03395, 0.30911], [0.16686, 0.03517, 0.30210], [-0.30547, -0.49257, -0.11709], [0.15859, -0.00338, 0.31998]].map((r, i) => [R21ROWS[i], ...r]),
+  }));
 
   /* Specialty explorer */
   const RINGS =['Shown in research', 'Next · public data identified', 'Vision'];
