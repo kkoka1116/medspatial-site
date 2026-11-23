@@ -402,6 +402,10 @@ footer.foot p + p { margin-top: 8px; }
   .held img { max-height: 380px; }
   .figs2 { grid-template-columns: minmax(0, 1fr); gap: 28px; }
 }
+.multi.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+@media (max-width: 960px) { .multi.three { grid-template-columns: minmax(0, 1fr); } }
+.sw.estimate { border-radius: 3px; background: repeating-linear-gradient(135deg, var(--base) 0 2px, transparent 2px 5px); border: 1px solid var(--base); }
+.status-fig { margin-top: 28px; }
 @media (max-width: 640px) {
   .pipe { grid-template-columns: minmax(0, 1fr); }
   .pipe li { grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); grid-template-rows: none; align-items: start; }
@@ -471,9 +475,9 @@ footer.foot p + p { margin-top: 8px; }
 <section class="hero" aria-labelledby="hero-title">
   <div class="wrap hero-grid">
     <div>
-      <p class="eyebrow">Research update · 10 November 2026</p>
+      <p class="eyebrow">Research update · 23 November 2026</p>
       <h1 id="hero-title">Learn anatomy once. <em>Plan for every patient.</em></h1>
-      <p class="lede">MedSpatial is building a shared 3D understanding of the human skeleton. It learns from scans nobody had to label, so surgical planning and patient-specific devices can be built from far fewer expert cases.</p>
+      <p class="lede">MedSpatial is building a shared 3D understanding of human anatomy, starting with the skeleton. It learns from scans nobody had to label, so surgical planning and patient-specific devices can be built from far fewer expert cases.</p>
       <div class="cta">
         <a class="btn primary" href="#evidence">See the evidence</a>
         <a class="btn ghost" href="#future">Where it goes next</a>
@@ -493,9 +497,9 @@ footer.foot p + p { margin-top: 8px; }
   <div class="wrap">
     <ul class="kpis">
       <li><span class="kpi-v">6.6<small>mm</small></span><span class="kpi-d">average fragment error on 88 sealed real pelvic fractures, each model scored once. Best model: pretrained, then fine-tuned on 82 other real cases.</span></li>
-      <li><span class="kpi-v">0.7<small>mm</small></span><span class="kpi-d">less error from anatomy pretraining on those sealed cases, against the same model trained from scratch for just as long.</span></li>
-      <li><span class="kpi-v">0<small>ribs seen</small></span><span class="kpi-d">in pretraining, yet the model labels ribs better from 10 examples: 0.86 overlap, against 0.74 from scratch.</span></li>
-      <li><span class="kpi-v">0<small>labels</small></span><span class="kpi-d">needed to place 57 pelvic landmarks at 6.8 mm. Two human experts differ by 4.6 mm.</span></li>
+      <li><span class="kpi-v">25<small>vs 221</small></span><span class="kpi-d">simulated pelvises: predicting stress inside the bone from shape plus CT density with 25 beats a pretrained 3D CT model given 221.</span></li>
+      <li><span class="kpi-v">0.79<small>Dice</small></span><span class="kpi-d">for skull implant shape on the public SkullBreak test, from a model pretrained on pelvises, against 0.63 from scratch.</span></li>
+      <li><span class="kpi-v">5<small>anatomies</small></span><span class="kpi-d">where pretraining has beaten training from scratch: pelvis, ribs, skull, teeth, and the heart and vessels.</span></li>
     </ul>
     <p class="fine">Research results on public data. Not a medical device. No clinical claims.</p>
   </div>
@@ -618,14 +622,14 @@ footer.foot p + p { margin-top: 8px; }
     </div>
     <figure class="fig">
       <div class="fig-t">Fragment error on 170 real pelvic fractures, best result to date</div>
-      <div class="fig-s">Mean distance between each fragment and its surgeon-verified position, in millimetres. Lower is better. Each point averages two independent training runs.</div>
+      <div class="fig-s">Mean distance between each fragment and its surgeon-verified position, in millimetres. Lower is better. Every model here trained on simulated fractures only. Each point averages two independent training runs, except 22 November, one run so far.</div>
       <div class="chart" id="c-frac"></div>
-      <div class="legend"><span><i class="sw ours"></i>MedSpatial, best to date</span><span><i class="sw hollow"></i>Classical methods, no learning</span><span><i class="sw dash"></i>Leaving every fragment where it lies</span></div>
+      <div class="legend"><span><i class="sw ours"></i>MedSpatial, best to date</span><span><i class="sw ring"></i>Read-out settings chosen on these same cases</span><span><i class="sw hollow"></i>Classical methods, no learning</span><span><i class="sw dash"></i>Leaving every fragment where it lies</span></div>
       <div class="steps" aria-label="Share of fragments placed within 5 millimetres and 10 degrees">
         <div><b>37%</b><span>placed within 5 mm and 10°, untouched</span></div>
         <div><b>42%</b><span>first learned model, 18 Oct</span></div>
-        <div><b>48%</b><span>trained three times longer, 19 Oct</span></div>
-        <div class="on"><b>51%</b><span>with anatomy pretraining, 25 Oct</span></div>
+        <div><b>51%</b><span>with anatomy pretraining, 25 Oct</span></div>
+        <div class="on"><b>54%</b><span>new pretraining task, 22 Nov</span></div>
       </div>
       <details class="nums"><summary>Show the numbers</summary><div class="scroll"><table>
         <thead><tr><th>Date</th><th>Method</th><th class="n">Mean error, mm</th><th class="n">Placed within 5 mm, 10°</th></tr></thead>
@@ -636,9 +640,13 @@ footer.foot p + p { margin-top: 8px; }
           <tr><td>18 Oct</td><td>First learned model, runs 1 / 2</td><td class="n">8.92 / 8.81</td><td class="n">42.1% / 41.6%</td></tr>
           <tr><td>19 Oct</td><td>Trained three times longer</td><td class="n">7.76 / 7.84</td><td class="n">49.4% / 46.1%</td></tr>
           <tr><td>25 Oct</td><td>With anatomy pretraining, trained longer</td><td class="n">7.31 / 7.38</td><td class="n">51.3% / 51.4%</td></tr>
-        </tbody></table></div></details>
+          <tr><td>17 Nov</td><td>Stronger pretraining, three times the fine-tuning</td><td class="n">7.04 / 7.02</td><td class="n">about 54%, run 2</td></tr>
+          <tr><td>22 Nov</td><td>A new pretraining task, one run so far</td><td class="n">6.94</td><td class="n">54.3%</td></tr>
+          <tr><td>22 Nov</td><td>17 Nov model, two passes plus a final rigid fit</td><td class="n">6.68</td><td class="n"></td></tr>
+        </tbody></table>
+        <p class="muted" style="font-size:13px;margin-top:8px">The 6.68 mm read-out adds no training, but its number of passes was chosen while looking at these 170 cases, so it is shown apart and will be re-checked on cases it has not seen. Details of the new pretraining task are held back until publication.</p></div></details>
     </figure>
-    <p class="note-line">On 26 October the 170 real cases were split: 82 for working and tuning, 88 sealed and scored once per finished model. This chart stops there. Results on the sealed half, down to 6.6 mm, are under <a href="#evidence">Evidence</a>.</p>
+    <p class="note-line">On 26 October the 170 real cases were split: 82 for working and tuning, 88 sealed and scored once per finished model. Results on the sealed half, down to 6.6 mm after fine-tuning on the 82 working cases, are under <a href="#evidence">Evidence</a>. From 17 November the chart continues with models that never saw a real fracture in training, scored on all 170 as before the split.</p>
 
     <ol class="timeline" aria-label="Milestones">
       <li><time datetime="2026-09-28">28–30 Sep</time><div><h3>Started on synthetic shapes</h3><p>About seventy small experiments on spheres, cones and tori. Nothing carried over, and an outside review showed the test could not tell good models from bad. We moved to real anatomy.</p></div><span class="tag ruled">Ruled out</span></li>
@@ -663,7 +671,17 @@ footer.foot p + p { margin-top: 8px; }
       <li><time datetime="2026-11-10">10 Nov</time><div><h3>More people, or a bigger model?</h3><p>Practising on more people helped fractures but not ribs. A model about eight times larger helped neither, and no general model reached the rib specialist (Route 19).</p></div><span class="tag mixed">Mixed</span></li>
       <li><time datetime="2026-11-10">10 Nov</time><div><h3>Bones only, or bones plus soft tissue?</h3><p>Adding organs, vessels and back muscles to practice helped neither ribs nor fractures, and did not clearly hurt them (Route 21).</p></div><span class="tag ruled">Ruled out</span></li>
       <li><time datetime="2026-11-10">10 Nov</time><div><h3>A harder practice task, and gentler fine-tuning</h3><p>Rebuilding whole hidden bones as well as patches (Route 20), and lower fine-tuning rates for the large model (Route 22). Both running on the laptop.</p></div><span class="tag running">Running</span></li>
-      <li><time datetime="2026-11-10">Next</time><div><h3>A pelvis top-up for the general model</h3><p>Approved, to start after Route 22: a short extra round of practice on pelvis scans, to see whether the general model can catch the pelvis specialist (Route 23).</p></div><span class="tag queued">Approved</span></li>
+      <li><time datetime="2026-11-10">10 Nov</time><div><h3>A pelvis top-up for the general model</h3><p>Approved, to start after Route 22: a short extra round of practice on pelvis scans, to see whether the general model can catch the pelvis specialist (Route 23).</p></div><span class="tag queued">Approved</span></li>
+      <li><time datetime="2026-11-17">17 Nov</time><div><h3>Under 7.1 mm without a single real case in training</h3><p>A stronger pretrained model, fine-tuned three times as long on simulated fractures only, scored 7.04 and 7.02 mm on all 170 real fractures. Against random weights trained just as long it is 1.0 mm better.</p></div><span class="tag result">Result</span></li>
+      <li><time datetime="2026-11-18">18 Nov</time><div><h3>Broken from intact, with no labels</h3><p>A simple read-out on the frozen pretrained model tells fractured pelvises from intact ones 96% of the time by AUROC, against 82% from random weights.</p></div><span class="tag result">Result</span></li>
+      <li><time datetime="2026-11-20">20–22 Nov</time><div><h3>Beyond the pelvis: skulls and teeth</h3><p>The pelvis-pretrained model, fine-tuned, beat training from scratch on skull implant shape (Dice 0.79 against 0.63 on the public SkullBreak test) and on teeth from 5 labelled scans (0.51 against 0.43).</p></div><span class="tag result">Result</span></li>
+      <li><time datetime="2026-11-21">21–22 Nov</time><div><h3>A new pretraining task: first under 7 mm</h3><p>6.94 mm and 54% of fragments placed on the 170 real cases, from one run. Details are held for publication; a second run is going.</p></div><span class="tag result">Result</span></li>
+      <li><time datetime="2026-11-21">21 Nov</time><div><h3>Scored on a specialist’s own metric</h3><p>On the metric of the best published pelvic reduction system, the model is at about 5.0 mm and 10°, against its 2.3 mm and 4.5° on a different set of cases. Roughly twice the error: a clear gap, recorded as such.</p></div><span class="tag ruled">Gap</span></li>
+      <li><time datetime="2026-11-22">22 Nov</time><div><h3>Heart and vessels</h3><p>The bone-pretrained model labels aortic branches from 5 scans better than scratch, and as well as one pretrained only on hearts and vessels. Aortic diameter met the 2 mm bar on held-out scans, not on an external set.</p></div><span class="tag mixed">Mixed</span></li>
+      <li><time datetime="2026-11-23">22–23 Nov</time><div><h3>A specialist-style head on our model</h3><p>Rebuilding the intact pelvis first, then fitting fragments to it, did not beat our existing reduction model. Pretraining still helped it: 0.5° less rotation error than the same head from scratch.</p></div><span class="tag ruled">Ruled out</span></li>
+      <li><time datetime="2026-11-23">23 Nov</time><div><h3>Stress inside the bone, from shape plus CT density</h3><p>On 98 pelvises kept out of every stage, adding CT density lets 25 simulations beat a pretrained 3D CT model trained on 221. An earlier pilot was set aside after an audit found its test pelvises in the pretraining pool.</p></div><span class="tag result">Result</span></li>
+      <li><time datetime="2026-11-23">23 Nov</time><div><h3>More data, checked before use</h3><p>An open-CT pipeline with automatic quality checks took the pretraining pool from 6,700 to 31,000 checked structures, with about 25,000 more from new public downloads being prepared. Sealed test subjects are locked out by a registry.</p></div><span class="tag built">Built</span></li>
+      <li><time datetime="2026-11-28">From 28 Nov</time><div><h3>Next fracture runs</h3><p>Four fine-tuning variants aimed at small fragments and the sacrum, queued for free cloud GPUs.</p></div><span class="tag queued">Queued</span></li>
     </ol>
   </div>
 </section>
@@ -673,8 +691,72 @@ footer.foot p + p { margin-top: 8px; }
     <div class="head prose">
       <p class="eyebrow">Evidence</p>
       <h2 id="evidence-title">What the results show.</h2>
-      <p class="lead">Seven findings carry the case, recent ones first. Each was tested against a control chosen to catch wishful thinking, and each is shown here with its numbers and its spread across independent runs.</p>
+      <p class="lead">Nine findings carry the case, recent ones first. The two newest, from November, take the model past the pelvis and ribs: to stress inside bone, and to skulls, teeth, the heart and vessels. Each was tested against a control chosen to catch wishful thinking, and each is shown with its numbers.</p>
     </div>
+
+    <article class="proof" aria-labelledby="pfea">
+      <div class="proof-head">
+        <h3 id="pfea">Adding CT bone density to shape predicts stress inside the bone, from far fewer simulations.</h3>
+        <div><div class="num">25 vs 221</div><div class="num-d">simulated pelvises: with shape plus CT density, 25 training cases beat a pretrained 3D CT model trained on 221 (interior R² 0.71 against 0.60)</div></div>
+      </div>
+      <div class="figs2">
+        <figure class="fig">
+          <div class="fig-t">Stress inside the bone</div>
+          <div class="fig-s">R² of predicted against simulated interior stress on 98 unseen pelvises. Higher is better.</div>
+          <div class="chart" id="c-fea-i"></div>
+        </figure>
+        <figure class="fig">
+          <div class="fig-t">Stress on the bone surface</div>
+          <div class="fig-s">Relative error of the predicted surface stress field on the same 98 pelvises. Lower is better.</div>
+          <div class="chart" id="c-fea-s"></div>
+          <div class="legend"><span><i class="sw ours"></i>MedSpatial shape plus CT density</span><span><i class="sw diamond"></i>Pretrained 3D CT model</span><span><i class="sw hollow"></i>MedSpatial shape alone</span></div>
+        </figure>
+      </div>
+      <div class="proof-body" style="grid-template-columns:minmax(0,1fr);gap:8px">
+        <div class="prose">
+          <p>Plates, screws and implants are judged by how bone carries load, and that depends on what is inside the bone as well as its outer shape. We simulated pelvises from public CT under a fixed load and trained models to predict the stress field from a small number of those simulations.</p>
+          <p class="muted">Shape alone handles the surface but barely sees inside with little data: interior R² 0.01 from 25 simulations, 0.48 from 221. Adding the scan’s density gives 0.71 from 25 and 0.81 from 221. A widely used 3D CT model, pretrained without labels, reaches 0.45 to 0.60.</p>
+        </div>
+        <div><details class="nums"><summary>Show the numbers</summary><div class="scroll"><table>
+          <thead><tr><th>Training simulations</th><th class="n">25</th><th class="n">50</th><th class="n">100</th><th class="n">221</th></tr></thead>
+          <tbody>
+            <tr><td>Interior R², shape plus density</td><td class="n">0.71</td><td class="n">0.72</td><td class="n">0.78</td><td class="n">0.81</td></tr>
+            <tr><td>Interior R², 3D CT model</td><td class="n">0.45</td><td class="n">n/a</td><td class="n">n/a</td><td class="n">0.60</td></tr>
+            <tr><td>Interior R², shape alone</td><td class="n">0.01</td><td class="n">0.14</td><td class="n">0.30</td><td class="n">0.48</td></tr>
+            <tr><td>Surface error, shape plus density</td><td class="n">0.44</td><td class="n">0.44</td><td class="n">0.38</td><td class="n">0.36</td></tr>
+            <tr><td>Surface error, 3D CT model</td><td class="n">0.47</td><td class="n">0.46</td><td class="n">0.43</td><td class="n">0.41</td></tr>
+            <tr><td>Surface error, shape alone</td><td class="n">0.56</td><td class="n">0.55</td><td class="n">0.49</td><td class="n">0.44</td></tr>
+          </tbody></table>
+          <p class="muted" style="font-size:13px;margin-top:8px">Surface error is the relative L2 error of von Mises stress. The 3D CT model’s interior scores at 50 and 100 simulations are not in this summary.</p></div></details></div>
+      </div>
+      <p class="test"><b>How it was tested</b>98 TotalSegmentator pelvises kept out of every pretraining and tuning step, checked against a subject registry. All three models saw the same simulations at each training size. Shape plus density beats the 3D CT model at every size on both measures, with 95% intervals of the difference clear of zero. The reference stresses come from our own finite-element simulations with simplified material properties, not from physical tests.</p>
+    </article>
+
+    <article class="proof" aria-labelledby="pxfer">
+      <div class="proof-head">
+        <h3 id="pxfer">A model pretrained on pelvises also helps skulls, teeth, the heart and vessels.</h3>
+        <div><div class="num">+0.16</div><div class="num-d">Dice for skull implant shape on the public SkullBreak test: 0.79 against 0.63 from scratch</div></div>
+      </div>
+      <figure class="fig">
+        <div class="fig-t">Three new anatomies, same pretrained model</div>
+        <div class="fig-s">Each panel compares the identical model trained from scratch with the pelvis-pretrained model, fine-tuned on the new task. Higher is better in every panel.</div>
+        <div class="multi three">
+          <div><div class="mt">Skull implants</div><div class="ms">Dice, 100 test skulls</div><div class="chart" id="c-x-skull"></div></div>
+          <div><div class="mt">Teeth</div><div class="ms">Mean IoU, 5 labelled scans</div><div class="chart" id="c-x-teeth"></div></div>
+          <div><div class="mt">Aortic branches</div><div class="ms">Mean IoU, 5 labelled scans</div><div class="chart" id="c-x-aorta"></div></div>
+        </div>
+        <details class="nums"><summary>Show the numbers</summary><div class="scroll"><table>
+          <thead><tr><th>Task</th><th class="n">From scratch</th><th class="n">Pelvis-pretrained</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td>Skull implant, Dice</td><td class="n">0.625</td><td class="n">0.785 / 0.786</td><td>two fine-tuning runs; frozen pretrained model 0.758</td></tr>
+            <tr><td>Skull implant, boundary error HD95</td><td class="n">33.8 mm</td><td class="n">3.2 mm</td><td></td></tr>
+            <tr><td>Teeth, mean IoU, 5 / 25 / 100 scans</td><td class="n">0.43 / 0.51 / 0.58</td><td class="n">0.51 / 0.55 / 0.63</td><td>one run, short training</td></tr>
+            <tr><td>Aortic branches, mean IoU, 5 / 25 scans</td><td class="n">0.42 / 0.51</td><td class="n">0.53 / 0.66</td><td>heart-and-vessel-only pretraining: 0.50 / 0.67</td></tr>
+            <tr><td>Aortic diameter error, held-out / external</td><td class="n">1.25 / 3.64 mm</td><td class="n">0.99 / 3.23 mm</td><td>2 mm bar met on held-out scans only</td></tr>
+          </tbody></table></div></details>
+      </figure>
+      <p class="test"><b>How it was tested</b>The skull test uses SkullBreak’s published 100-case test set; published SkullBreak systems reach about 0.87 Dice on their own split, so this is a transfer result, not a record. The heart and vessel test had pass marks set beforehand: +5 points over scratch at 5 labels (met) and diameter within 2 mm (met on held-out TotalSegmentator scans, missed on the external AVT set). One or two runs per arm, so these are early results.</p>
+    </article>
 
     <article class="proof" aria-labelledby="p0">
       <div class="proof-head">
@@ -926,13 +1008,19 @@ footer.foot p + p { margin-top: 8px; }
       <div class="tile"><span class="v">119</span><span class="d">experiment protocols and pre-registrations written before the runs they describe</span></div>
       <div class="tile"><span class="v">84</span><span class="d">results reports, negative results included. Each pre-registration also records its own result.</span></div>
       <div class="tile"><span class="v">5</span><span class="d">sealed test sets, never used for tuning. Each finished model is scored once on the set for its task. Two have never been opened.</span></div>
-      <div class="tile"><span class="v">1</span><span class="d">laptop runs every model. Training used that laptop and free cloud notebooks.</span></div>
+      <div class="tile"><span class="v">2</span><span class="d">personal computers run every model. Training used them and free cloud notebooks.</span></div>
     </div>
     <ul class="principles">
       <li><h3>Controls that catch wishful thinking</h3><p>Every pretrained model is compared with the identical model started from scratch, so a gain from the architecture is never mistaken for a gain from learning.</p></li>
       <li><h3>Failures are kept</h3><p>More than a dozen routes that did not work are documented as carefully as the ones that did. Each one narrowed down what the next experiment should try.</p></li>
       <li><h3>Local first</h3><p>Models run on a single machine with no cloud AI service in the loop, which suits hospitals that keep patient data on site.</p></li>
     </ul>
+    <figure class="fig" style="margin-top:40px">
+      <div class="fig-t">More practice data, checked before it is used</div>
+      <div class="fig-s">Anatomical structures available for pretraining, from public CT. Every new structure passes automatic geometry and outlier checks, and sealed test subjects are locked out.</div>
+      <div class="chart" id="c-datagrow"></div>
+      <div class="legend"><span><i class="sw base"></i>Before 22 November</span><span><i class="sw ours"></i>Checked and ready</span><span><i class="sw estimate"></i>Estimate, being prepared from new public downloads</span></div>
+    </figure>
   </div>
 </section>
 
@@ -959,7 +1047,7 @@ footer.foot p + p { margin-top: 8px; }
           <div><span>Intervention</span><b id="sp-dev">Plates and screws</b></div>
           <div class="out"><span>Design</span><b id="sp-des">A fragment-by-fragment reduction plan</b></div>
         </div>
-        <p id="sp-today">6.6 mm mean fragment error on 88 sealed real fractures, after fine-tuning on 82 others. Pretrained models lead training from scratch by about 0.7 mm at equal length.</p>
+        <p id="sp-today">6.6 mm mean fragment error on 88 sealed real fractures after fine-tuning on 82 others, and 6.9 mm on all 170 with no real cases in training. The best published specialist is still about twice as accurate on its own metric.</p>
         <p class="data" id="sp-data">The proving ground for the approach, on public research data.</p>
       </div>
     </div>
@@ -1010,8 +1098,8 @@ footer.foot p + p { margin-top: 8px; }
       <h3 style="font-size:clamp(26px,3vw,34px);font-stretch:86%">The road from here.</h3>
     </div>
     <div class="horizons">
-      <div class="hz now"><span class="when">Now · research</span><h3>Prove the foundation</h3><ul><li>Label-free practice on the whole skeleton</li><li>Two anatomies: pelvic fractures and ribs</li><li>Testing what practice needs: more people, larger models, soft tissue</li></ul></div>
-      <div class="hz next"><span class="when">Next · first tools</span><h3>Give clinicians time back</h3><ul><li>Landmark pre-placement for specialists to confirm</li><li>More anatomy: spine, teeth, skull</li><li>A general model that matches the specialists</li></ul></div>
+      <div class="hz now"><span class="when">Now · research</span><h3>Prove the foundation</h3><ul><li>Label-free practice on the whole skeleton</li><li>Five anatomies: pelvis, ribs, skull, teeth, heart and vessels</li><li>Stress inside bone, from shape plus CT density</li></ul></div>
+      <div class="hz next"><span class="when">Next · first tools</span><h3>Give clinicians time back</h3><ul><li>Landmark pre-placement for specialists to confirm</li><li>Spine, and more of the heart and vessels</li><li>A general model that matches the specialists</li></ul></div>
       <div class="hz"><span class="when">Later · the patient model</span><h3>See the whole patient</h3><ul><li>Bone, vessels, soft tissue and teeth in one spatial model</li><li>Change over time: growth, healing, treatment</li><li>Uncertainty a surgeon can see</li></ul></div>
       <div class="hz"><span class="when">Vision · engineering</span><h3>Design what fits</h3><ul><li>From clinical goal to validated, manufacturable design</li><li>Cleft appliances, implants, guides and braces</li><li>Every operation checked and traceable</li></ul></div>
     </div>
@@ -1025,11 +1113,17 @@ footer.foot p + p { margin-top: 8px; }
       <h2 id="status-title">Early, measured, and specific about the gaps.</h2>
       <ul class="facts">
         <li><b>Research stage.</b> Nothing here is a clinical claim, and MedSpatial is not a medical device.</li>
-        <li><b>Not yet the most accurate.</b> The best published fracture systems still have lower error. They are scored on a different, hidden test set and train on the real cases we keep for testing, so the numbers do not compare directly.</li>
-        <li><b>Two anatomies so far.</b> Pretraining has helped pelvic fractures and rib labelling, even when the model never saw either. A general model still trails the specialists pretrained on ribs or pelves.</li>
+        <li><b>Not yet the most accurate.</b> Scored the way the best published pelvic reduction system is scored, our model has about twice its error: 5.0 mm and 10° against 2.3 mm and 4.5°, on different cases. Fracture reduction is our test of pretraining, not a claim of state of the art.</li>
+        <li><b>Five anatomies, early on three.</b> Pretraining has helped pelvic fractures and rib labelling across repeated runs. Skulls, teeth, and the heart and vessels have one or two runs each. A general model still trails the specialists pretrained on ribs or pelves.</li>
+        <li><b>Stress results are simulated.</b> Stress predictions are scored against our own finite-element simulations, not against measurements on real bone.</li>
         <li><b>Bigger is not better yet, nor broader.</b> A model about eight times larger improved neither task, and adding soft tissue to practice did not help the bone tasks. Practising on more people helped fractures but not ribs.</li>
         <li><b>Small fragments are the frontier.</b> The model improves every size of fragment, but the smallest pieces still carry the most error.</li>
       </ul>
+      <figure class="fig status-fig">
+        <div class="fig-t">The gap to the best published specialist</div>
+        <div class="fig-s">Mean fragment error on the specialist’s own metric, mm, lower is better. Its 191 test bones and our 170 cases come from the same public challenge but are not the same cases.</div>
+        <div class="chart" id="c-gapspec"></div>
+      </figure>
     </div>
     <figure class="fig">
       <div class="fig-t">Error by fragment size, 25 October model</div>
@@ -1064,8 +1158,8 @@ footer.foot p + p { margin-top: 8px; }
 
 <footer class="foot">
   <div class="wrap">
-    <p>Results use public research data: TotalSegmentator v2.0.1 (CC BY 4.0), CTPelvic1K (CC BY 4.0), MedPelvis3D v3.0.0 and the PENGWIN 2026 pelvic fracture challenge (CC BY-NC 4.0), and RibSeg v2 (research use; no licence stated). Collection sizes in the data chart come from each collection’s own published description. The hero illustration is drawn from one CTPelvic1K pelvis surface. The bone renders under How it learns show one TotalSegmentator training subject; no sealed test case is shown anywhere on this page.</p>
-    <p>Updated 10 November 2026 · Research use only · © 2026 MedSpatial</p>
+    <p>Results use public research data: TotalSegmentator v2.0.1 (CC BY 4.0), CTPelvic1K (CC BY 4.0), MedPelvis3D v3.0.0 and the PENGWIN 2026 pelvic fracture challenge (CC BY-NC 4.0), RibSeg v2 (research use; no licence stated), SkullBreak (CC BY-NC-SA 4.0), Teeth3DS+ (CC BY-NC-ND 4.0), the AVT aortic vessel trees (CC BY 4.0), and, for the data pipeline, TotalSegmentator v3 (CC BY 4.0) and AMOS 2022. Stress simulations are our own, built from TotalSegmentator CT. Fracture models on this page train on simulated fractures and are scored on the public challenge cases; no patient data leaves the project’s own machines. Collection sizes in the data chart come from each collection’s own published description. The hero illustration is drawn from one CTPelvic1K pelvis surface. The bone renders under How it learns show one TotalSegmentator training subject; no sealed test case is shown anywhere on this page.</p>
+    <p>Updated 23 November 2026 · Research use only · © 2026 MedSpatial</p>
   </div>
 </footer>
 
@@ -1174,20 +1268,21 @@ const PELVIS = {"p":[79,0,81,-62,-37,-113,-131,13,63,89,-24,-75,-25,-57,14,-2,64
   mount('c-frac', (host, w, bind) => {
     const narrow = w < 600;
     const H = narrow ? 330 : 370, m = { l: 34, r: narrow ? 8 : 16, t: 22, b: 32 };
-    const svg = svgFor(host, w, H, 'Best fragment error to date fell from 10.3 mm to 7.3 mm between 16 and 25 October');
-    const X = d => m.l + (d - 15.6) / (26.4 - 15.6) * (w - m.l - m.r);
+    const svg = svgFor(host, w, H, 'Best fragment error to date fell from 10.3 mm on 16 October to 6.9 mm on 22 November');
+    /* days: October d is d, November d is 31 + d */
+    const X = d => m.l + (d - 15.2) / (55.2 - 15.2) * (w - m.l - m.r);
     const Y = v => m.t + (15 - v) / 9 * (H - m.t - m.b);
     [6, 8, 10, 12, 14].forEach(v => {
       S('line', { x1: m.l, x2: w - m.r, y1: Y(v), y2: Y(v), class: 'gridline' }, svg);
       T(svg, m.l - 8, Y(v) + 4, String(v), 't-num t-axis', 'end');
     });
     T(svg, m.l - 8, m.t - 8, 'mm', 't-axis', 'end');
-    (narrow ? [16, 19, 22, 25] : [16, 18, 20, 22, 24, 26]).forEach(d => T(svg, X(d), H - 8, 'Oct ' + d, 't-num t-axis', 'middle'));
-    const step = [[16, 10.26], [18, 10.26], [18, 8.87], [19, 8.87], [19, 7.80], [25, 7.80], [25, 7.35], [26, 7.35]];
+    (narrow ? [[16, 'Oct 16'], [32, 'Nov 1'], [47, 'Nov 16']] : [[16, 'Oct 16'], [25, 'Oct 25'], [34, 'Nov 3'], [43, 'Nov 12'], [52, 'Nov 21']]).forEach(([d, s]) => T(svg, X(d), H - 8, s, 't-num t-axis', 'middle'));
+    const step = [[16, 10.26], [18, 10.26], [18, 8.87], [19, 8.87], [19, 7.80], [25, 7.80], [25, 7.35], [48, 7.35], [48, 7.03], [53, 7.03], [53, 6.94], [55, 6.94]];
     const pts = step.map(([d, v]) => `${X(d).toFixed(1)},${Y(v).toFixed(1)}`);
-    S('polygon', { points: pts.concat(`${X(26).toFixed(1)},${Y(10.26).toFixed(1)}`).join(' '), class: 'm-soft' }, svg);
-    S('line', { x1: X(15.8), x2: X(26.3), y1: Y(10.26), y2: Y(10.26), class: 's-base', 'stroke-width': 2, 'stroke-dasharray': '6 5' }, svg);
-    T(svg, X(26.3), Y(10.26) - 9, narrow ? 'Left where they lie · 10.3' : 'Fragments left where they lie · 10.3 mm', 't-ink t-small', 'end');
+    S('polygon', { points: pts.concat(`${X(55).toFixed(1)},${Y(10.26).toFixed(1)}`).join(' '), class: 'm-soft' }, svg);
+    S('line', { x1: X(15.4), x2: X(55.1), y1: Y(10.26), y2: Y(10.26), class: 's-base', 'stroke-width': 2, 'stroke-dasharray': '6 5' }, svg);
+    T(svg, X(55.1), Y(10.26) - 9, narrow ? 'Left where they lie · 10.3' : 'Fragments left where they lie · 10.3 mm', 't-ink t-small', 'end');
     S('polyline', { points: pts.join(' '), fill: 'none', class: 's-ours', 'stroke-width': 3, 'stroke-linejoin': 'round' }, svg);
     [[11.30, 'Copy the healthy side', 'Copy healthy side', 32.4], [14.29, 'Fit an average pelvis', 'Average pelvis', 13.9]].forEach(([v, a, b, pc]) => {
       const c = S('circle', { cx: X(16), cy: Y(v), r: 6, class: 'm-surface s-base', 'stroke-width': 2.5 }, svg);
@@ -1195,16 +1290,22 @@ const PELVIS = {"p":[79,0,81,-62,-37,-113,-131,13,63,89,-24,-75,-25,-57,14,-2,64
       bind(c, `${a}: <b>${v.toFixed(2)} mm</b><br>classical method, no learning · ${pc}% placed`);
     });
     const ms = [
-      { d: 18, v: 8.87, a: 'First learned model', b: 'First learned', dy: -13, pc: 42, runs: '8.92 / 8.81' },
-      { d: 19, v: 7.80, a: 'Trained 3× longer', b: 'Trained longer', dy: 22, pc: 48, runs: '7.76 / 7.84' },
-      { d: 25, v: 7.35, a: 'With anatomy pretraining', b: '+ pretraining', dy: 31, end: true, pc: 51, runs: '7.31 / 7.38' },
+      { d: 18, v: 8.87, a: 'First learned model', b: 'First learned', dy: -13, date: '18 Oct', note: 'runs 8.92 / 8.81 · 42% placed' },
+      { d: 19, v: 7.80, a: 'Trained 3× longer', b: 'Trained longer', dy: 22, ndy: -10, date: '19 Oct', note: 'runs 7.76 / 7.84 · 48% placed' },
+      { d: 25, v: 7.35, a: 'With anatomy pretraining', b: '+ pretraining', dy: 22, date: '25 Oct', note: 'runs 7.31 / 7.38 · 51% placed' },
+      { d: 48, v: 7.03, a: 'Stronger pretraining', b: 'Stronger', dy: -22, end: true, date: '17 Nov', note: 'runs 7.04 / 7.02' },
+      { d: 53, v: 6.94, a: 'New pretraining task', b: 'New task', dy: -44, end: true, date: '22 Nov', note: 'one run so far · 54% placed' },
     ];
     ms.forEach(p => {
       S('circle', { cx: X(p.d), cy: Y(p.v), r: 8.5, class: 'm-surface' }, svg);
       const dot = S('circle', { cx: X(p.d), cy: Y(p.v), r: 6, class: 'm-ours' }, svg);
-      T(svg, p.end ? X(p.d) - 10 : X(p.d) + 10, Y(p.v) + p.dy, (narrow ? p.b : p.a) + ' · ' + p.v.toFixed(1), 't-ink t-strong t-small', p.end ? 'end' : 'start');
-      bind(dot, `${p.a}, ${p.d} Oct: <b>${p.v.toFixed(2)} mm</b><br>runs ${p.runs} · ${p.pc}% placed`);
+      T(svg, p.end ? X(p.d) - 10 : X(p.d) + 10, Y(p.v) + (narrow && p.ndy != null ? p.ndy : p.dy), (narrow ? p.b : p.a) + ' · ' + p.v.toFixed(1), 't-ink t-strong t-small', p.end ? 'end' : 'start');
+      bind(dot, `${p.a}, ${p.date}: <b>${p.v.toFixed(2)} mm</b><br>${p.note}`);
     });
+    S('line', { x1: X(48), x2: X(54), y1: Y(7.03), y2: Y(6.68), class: 's-ours', 'stroke-width': 1.5, 'stroke-dasharray': '3 4' }, svg);
+    const ro = S('circle', { cx: X(54), cy: Y(6.68), r: 6, class: 'm-surface s-ours', 'stroke-width': 2.5 }, svg);
+    T(svg, X(54) - 10, Y(6.68) + 24, (narrow ? 'Two passes + fit' : 'Same model, two passes and a fit') + ' · 6.7', 't-ink t-small', 'end');
+    bind(ro, '17 Nov model, two passes plus a final rigid fit: <b>6.68 mm</b><br>no extra training; passes chosen on these same cases');
   });
 
   /* Dumbbells: from (hollow) to (filled) */
@@ -1536,20 +1637,121 @@ const PELVIS = {"p":[79,0,81,-62,-37,-113,-131,13,63,89,-24,-75,-25,-57,14,-2,64
     rows: [[0.16864, 0.03395, 0.30911], [0.16686, 0.03517, 0.30210], [-0.30547, -0.49257, -0.11709], [0.15859, -0.00338, 0.31998]].map((r, i) => [R21ROWS[i], ...r]),
   }));
 
+  /* Curves over training-set size, log x */
+  function curves(host, w, bind, cfg) {
+    const narrow = w < 420;
+    const H = 250, m = { l: 40, r: narrow ? 14 : 22, t: 14, b: 44 };
+    const svg = svgFor(host, w, H, cfg.label);
+    const lx = Math.log(cfg.xs[0]), hx = Math.log(cfg.xs[cfg.xs.length - 1]);
+    const X = n => m.l + (Math.log(n) - lx) / (hx - lx) * (w - m.l - m.r);
+    const Y = v => m.t + (cfg.max - v) / (cfg.max - cfg.min) * (H - m.t - m.b);
+    cfg.ticks.forEach(v => {
+      S('line', { x1: m.l, x2: w - m.r, y1: Y(v), y2: Y(v), class: 'gridline' }, svg);
+      T(svg, m.l - 8, Y(v) + 4, cfg.tf(v), 't-num t-axis', 'end');
+    });
+    cfg.xs.forEach(n => T(svg, X(n), H - 24, String(n), 't-num t-axis', 'middle'));
+    T(svg, (m.l + w - m.r) / 2, H - 4, 'training simulations', 't-axis', 'middle');
+    cfg.series.forEach(se => {
+      const p = se.pts.filter(([, v]) => v != null);
+      S('polyline', { points: p.map(([n, v]) => `${X(n)},${Y(v)}`).join(' '), fill: 'none', class: se.k === 'base' ? 's-base' : se.k === 'amber' ? 's-amber' : 's-ours', 'stroke-width': se.k === 'ours' ? 3 : 2.25, 'stroke-linejoin': 'round', 'stroke-dasharray': se.gap ? '5 5' : 'none' }, svg);
+      p.forEach(([n, v]) => bind(mark(svg, se.k, X(n), Y(v)), `${se.n}, ${n} simulations: <b>${cfg.fmt(v)}</b>`));
+    });
+  }
+  const FEA_X = [25, 50, 100, 221];
+  mount('c-fea-i', (host, w, bind) => curves(host, w, bind, {
+    label: 'Interior stress R squared by number of training simulations: shape plus density, pretrained 3D CT model, shape alone',
+    xs: FEA_X, min: 0, max: 0.9, ticks: [0, 0.2, 0.4, 0.6, 0.8], tf: v => v.toFixed(1), fmt: v => 'R² ' + v.toFixed(2),
+    series: [
+      { n: 'Shape alone', k: 'base', pts: [[25, 0.01], [50, 0.14], [100, 0.30], [221, 0.48]] },
+      { n: 'Pretrained 3D CT model', k: 'amber', gap: true, pts: [[25, 0.45], [50, null], [100, null], [221, 0.60]] },
+      { n: 'Shape plus CT density', k: 'ours', pts: [[25, 0.71], [50, 0.72], [100, 0.78], [221, 0.81]] },
+    ],
+  }));
+  mount('c-fea-s', (host, w, bind) => curves(host, w, bind, {
+    label: 'Surface stress error by number of training simulations: shape plus density, pretrained 3D CT model, shape alone',
+    xs: FEA_X, min: 0.3, max: 0.6, ticks: [0.3, 0.4, 0.5, 0.6], tf: v => v.toFixed(1), fmt: v => v.toFixed(2),
+    series: [
+      { n: 'Shape alone', k: 'base', pts: [[25, 0.56], [50, 0.55], [100, 0.49], [221, 0.44]] },
+      { n: 'Pretrained 3D CT model', k: 'amber', pts: [[25, 0.47], [50, 0.46], [100, 0.43], [221, 0.41]] },
+      { n: 'Shape plus CT density', k: 'ours', pts: [[25, 0.44], [50, 0.44], [100, 0.38], [221, 0.36]] },
+    ],
+  }));
+  const XFER = { max: 1, ticks: [0, 0.5, 1], tickFmt: v => v.toFixed(1), fmt: v => v.toFixed(2) };
+  mount('c-x-skull', (host, w, bind) => hbars(host, w, bind, Object.assign({}, XFER, {
+    label: 'Skull implant Dice: scratch 0.63, frozen pretrained 0.76, fine-tuned pretrained 0.79',
+    rows: [
+      { n: 'From scratch', v: 0.625, note: 'one run' },
+      { n: 'Pretrained, frozen', v: 0.758, o: true },
+      { n: 'Pretrained, fine-tuned', v: 0.7854, o: true, note: 'runs 0.785 / 0.786' },
+    ],
+  })));
+  mount('c-x-teeth', (host, w, bind) => hbars(host, w, bind, Object.assign({}, XFER, {
+    label: 'Teeth segmentation mean IoU from 5 labelled scans: scratch 0.43, pelvis-pretrained 0.51',
+    rows: [
+      { n: 'From scratch', v: 0.434, note: 'one run, short training' },
+      { n: 'Pelvis-pretrained', v: 0.507, o: true, note: 'one run, short training' },
+    ],
+  })));
+  mount('c-x-aorta', (host, w, bind) => hbars(host, w, bind, Object.assign({}, XFER, {
+    label: 'Aortic branch labelling mean IoU from 5 labelled scans: scratch 0.42, heart and vessel pretraining 0.50, pelvis-pretrained 0.53',
+    rows: [
+      { n: 'From scratch', v: 0.420 },
+      { n: 'Heart and vessels only', v: 0.496, note: 'pretrained on hearts and vessels' },
+      { n: 'Pelvis-pretrained', v: 0.527, o: true },
+    ],
+  })));
+  mount('c-datagrow', (host, w, bind) => {
+    const rows = [
+      { n: 'Before 22 November', a: 0, b: 6700, k: 'm-base', note: 'all earlier pretraining pools' },
+      { n: 'Added from TotalSegmentator v2, checked', a: 6700, b: 31300, k: 'm-ours', note: '+24,600 structures that passed the checks' },
+      { n: 'New downloads, being prepared', a: 31300, b: 58600, k: 'est', note: 'about +27,000, estimated before checks' },
+    ];
+    const rowH = 50, top = 8, bottom = 28, H = top + rows.length * rowH + bottom;
+    const svg = svgFor(host, w, H, 'Pretraining structures: 6,700 before 22 November, 31,300 checked now, and up to about 59,000 before checks once new downloads are prepared');
+    const x0 = 2, x1 = w - (w < 560 ? 70 : 140), X = v => x0 + v / 60000 * (x1 - x0);
+    let defs = S('defs', null, svg);
+    const pat = S('pattern', { id: 'hatch-est', width: 6, height: 6, patternUnits: 'userSpaceOnUse', patternTransform: 'rotate(45)' }, defs);
+    S('line', { x1: 0, y1: 0, x2: 0, y2: 6, class: 's-base', 'stroke-width': 2 }, pat);
+    [0, 20000, 40000, 60000].forEach(v => {
+      S('line', { x1: X(v), x2: X(v), y1: top - 4, y2: H - bottom + 2, class: 'gridline' }, svg);
+      T(svg, X(v), H - 8, v ? (v / 1000) + 'k' : '0', 't-num t-axis', v === 0 ? 'start' : 'middle');
+    });
+    rows.forEach((r, i) => {
+      const y = top + i * rowH, by = y + 24, bh = 16;
+      T(svg, x0, y + 16, r.n, 't-ink');
+      const attrs = { x: X(r.a), y: by, width: Math.max(2, X(r.b) - X(r.a)), height: bh, rx: 4 };
+      const bar = r.k === 'est' ? S('rect', Object.assign(attrs, { fill: 'url(#hatch-est)', class: 's-base', 'stroke-width': 1 }), svg) : S('rect', Object.assign(attrs, { class: r.k }), svg);
+      const lab = r.k === 'est' ? '~' + Math.round(r.b / 1000) + 'k' + (w < 560 ? '' : ' before checks') : (r.b / 1000).toFixed(1) + 'k';
+      T(svg, X(r.b) + 8, by + 12.5, lab, 't-num t-ink');
+      bind(bar, `${r.n}: <b>${lab} total</b><br>${r.note}`);
+    });
+  });
+  mount('c-gapspec', (host, w, bind) => hbars(host, w, bind, {
+    label: 'Mean fragment error on the specialist metric: published specialist 2.34 mm, MedSpatial 3.94 mm within its training range and 4.97 mm on all 170, left in place 10.78 mm',
+    max: 12, ticks: [0, 3, 6, 9, 12], tickFmt: v => v + (v === 12 ? ' mm' : ''), fmt: v => v.toFixed(2) + ' mm',
+    rows: [
+      { n: 'Best published specialist, 191 bones', v: 2.34, note: '4.54° rotation error, as published' },
+      { n: 'MedSpatial, 85 cases in its training range', v: 3.94, o: true, note: '6.96° rotation error' },
+      { n: 'MedSpatial, all 170 cases', v: 4.97, o: true, note: '10.12° rotation error' },
+      { n: 'Fragments left where they lie', v: 10.78, note: '13.82° rotation error' },
+    ],
+  }));
+
   /* Specialty explorer */
   const RINGS =['Shown in research', 'Next · public data identified', 'Vision'];
   const SPECS = [
-    { id: 'fracture', ring: 0, ang: -90, name: 'Pelvic fracture planning', cur: 'Fractured pelvis', goal: 'Restored pelvic ring', dev: 'Plates and screws', des: 'A fragment-by-fragment reduction plan', today: '6.6 mm mean fragment error on 88 sealed real fractures, after fine-tuning on 82 others. Pretrained models lead training from scratch by about 0.7 mm at equal length.', data: 'The proving ground for the approach, on public research data.' },
-    { id: 'landmarks', ring: 0, ang: 30, name: 'Anatomical landmarking', cur: 'Pelvis surface', goal: '57 named landmarks', dev: 'Measurement and implant sizing', des: 'Landmarks pre-placed for a specialist to confirm', today: '6.8 mm with zero labelled examples. Two human experts differ by 4.6 mm.', data: 'A candidate for the first clinician tool.' },
-    { id: 'align', ring: 0, ang: 150, name: 'Scan alignment', cur: 'Two partial bone scans', goal: 'One aligned anatomy', dev: 'Navigation and follow-up comparison', des: 'Rigid alignment of bone surfaces', today: 'Aligns more bone pairs than the standard hand-built method, on 37 people never seen in training.', data: 'Ribs, vertebrae, hips and skulls from public CT.' },
+    { id: 'fracture', ring: 0, ang: -90, name: 'Pelvic fracture planning', cur: 'Fractured pelvis', goal: 'Restored pelvic ring', dev: 'Plates and screws', des: 'A fragment-by-fragment reduction plan', today: '6.6 mm mean fragment error on 88 sealed real fractures after fine-tuning on 82 others, and 6.9 mm on all 170 with no real cases in training. The best published specialist is still about twice as accurate on its own metric.', data: 'The proving ground for the approach, on public research data.' },
+    { id: 'landmarks', ring: 0, ang: 54, name: 'Anatomical landmarking', cur: 'Pelvis surface', goal: '57 named landmarks', dev: 'Measurement and implant sizing', des: 'Landmarks pre-placed for a specialist to confirm', today: '6.8 mm with zero labelled examples. Two human experts differ by 4.6 mm.', data: 'A candidate for the first clinician tool.' },
+    { id: 'align', ring: 0, ang: 126, name: 'Scan alignment', cur: 'Two partial bone scans', goal: 'One aligned anatomy', dev: 'Navigation and follow-up comparison', des: 'Rigid alignment of bone surfaces', today: 'Aligns more bone pairs than the standard hand-built method, on 37 people never seen in training.', data: 'Ribs, vertebrae, hips and skulls from public CT.' },
     { id: 'spine', ring: 1, ang: -45, name: 'Spine', cur: 'Vertebrae', goal: 'Stable fixation', dev: 'Pedicle screws', des: 'Safe screw trajectories', today: 'Next anatomy: name each vertebra, then plan trajectories with strong geometric constraints.', data: 'Public sets with more than 11,000 labelled vertebrae.' },
-    { id: 'ribs', ring: 0, ang: 90, name: 'Rib labelling', cur: 'Rib cage', goal: 'Each rib identified', dev: 'Fixation and reporting', des: 'Which rib, and where it is broken', today: 'From 10 labelled cases: 0.89 overlap on a sealed test of 160 cases after rib-cage practice, against 0.74 from scratch. A model that never saw a rib reaches 0.86.', data: 'RibSeg v2: 660 public CT cases with 15,466 labelled ribs, research use.' },
-    { id: 'teeth', ring: 1, ang: 135, name: 'Teeth and orthodontics', cur: 'Intraoral scan', goal: 'Target alignment', dev: 'Aligners and appliances', des: 'A treatment and appliance sequence', today: 'A different scanner and anatomy: the cross-modality test, in a field with high procedure volume.', data: '1,800 public intraoral scans with 23,999 labelled teeth.' },
-    { id: 'cranial', ring: 1, ang: 225, name: 'Cranial implants', cur: 'Skull with a defect', goal: 'Intact skull contour', dev: 'Patient-specific implant', des: 'Implant geometry that fits the defect', today: 'Completing missing anatomy, the same skill small fracture fragments need.', data: 'Public skull sets; ground truth comes from intact skulls.' },
+    { id: 'ribs', ring: 0, ang: -18, name: 'Rib labelling', cur: 'Rib cage', goal: 'Each rib identified', dev: 'Fixation and reporting', des: 'Which rib, and where it is broken', today: 'From 10 labelled cases: 0.89 overlap on a sealed test of 160 cases after rib-cage practice, against 0.74 from scratch. A model that never saw a rib reaches 0.86.', data: 'RibSeg v2: 660 public CT cases with 15,466 labelled ribs, research use.' },
+    { id: 'teeth', ring: 1, ang: 135, name: 'Teeth and orthodontics', cur: 'Intraoral scan', goal: 'Target alignment', dev: 'Aligners and appliances', des: 'A treatment and appliance sequence', today: 'Early result: from 5 labelled scans, the pelvis-pretrained model segments teeth at 0.51 mean IoU, against 0.43 from scratch, in one short run.', data: '1,800 public intraoral scans with 23,999 labelled teeth.' },
+    { id: 'cranial', ring: 0, ang: 198, name: 'Cranial implants', cur: 'Skull with a defect', goal: 'Intact skull contour', dev: 'Patient-specific implant', des: 'Implant geometry that fits the defect', today: 'Dice 0.79 on the public SkullBreak test from a pelvis-pretrained model, against 0.63 from scratch. Published systems reach about 0.87, so this is transfer, not a record.', data: 'SkullBreak: public skulls with synthetic defects, research use.' },
+    { id: 'stress', ring: 1, ang: 225, name: 'Bone stress and implant loads', cur: 'Bone shape and CT density', goal: 'Stress under load', dev: 'Plates, screws and implants', des: 'Fast stress estimates to screen designs', today: 'Interior stress R² 0.71 from 25 simulated pelvises, against 0.60 for a pretrained 3D CT model trained on 221. Scored against simulations, not physical tests.', data: 'Simulations built from public TotalSegmentator CT.' },
     { id: 'cleft', ring: 2, ang: -120, origin: true, name: 'Cleft care', cur: 'Infant cleft scan', goal: 'Presurgical alignment', dev: 'Nasoalveolar molding appliance', des: 'A sequence of appliances', today: 'Where MedSpatial began. MoldStudio designs these appliances, and a shared anatomy model is meant to make a few dozen scans enough.', data: 'A few dozen scans, and always scarce.' },
     { id: 'jaw', ring: 2, ang: -60, name: 'Jaw reconstruction', cur: 'Jaw defect and fibula', goal: 'Restored jaw and bite', dev: 'Fibula free flap and plates', des: 'Cutting guides and a segment plan', today: 'Needs bone, vessels and soft tissue in one model of the patient.', data: 'Long-term vision.' },
     { id: 'joint', ring: 2, ang: 0, name: 'Joint replacement', cur: 'Pelvis and femur', goal: 'Restored biomechanics', dev: 'Hip or knee implant system', des: 'Implant size and orientation', today: 'Pelvic anatomy is already the project’s home ground.', data: 'Long-term vision.' },
-    { id: 'vascular', ring: 2, ang: 60, name: 'Vascular devices', cur: 'Vessel anatomy', goal: 'Restored flow', dev: 'Stent or graft', des: 'Device geometry and position', today: 'Needs vessel centrelines and branching, and eventually flow simulation.', data: 'Long-term vision.' },
+    { id: 'vascular', ring: 1, ang: 45, name: 'Vascular devices', cur: 'Vessel anatomy', goal: 'Restored flow', dev: 'Stent or graft', des: 'Device geometry and position', today: 'Early result: aortic branch labelling from 5 scans at 0.53 IoU, against 0.42 from scratch. Diameter error 1.0 mm on held-out scans, 3.2 mm on an external set.', data: 'Public CT with aorta and vessel labels: TotalSegmentator and AVT.' },
     { id: 'ear', ring: 2, ang: 120, name: 'Ear reconstruction', cur: 'Opposite ear and donor cartilage', goal: 'A matching ear', dev: 'Carved cartilage framework', des: 'Framework shape and machining path', today: 'Anatomy to geometry to manufacturing to verification, in one workflow.', data: 'Long-term vision.' },
     { id: 'ortho', ring: 2, ang: 180, name: 'Braces and prosthetics', cur: 'Limb, torso or head scan', goal: 'Support or replacement', dev: 'Brace, socket or helmet', des: 'Patient-specific device geometry', today: 'Anatomy-to-device design at high volume.', data: 'Long-term vision.' },
   ];
@@ -1584,7 +1786,7 @@ const PELVIS = {"p":[79,0,81,-62,-37,-113,-131,13,63,89,-24,-75,-25,-57,14,-2,64
     chipset.querySelectorAll('.chip').forEach(b => b.setAttribute('aria-pressed', b.dataset.id === id ? 'true' : 'false'));
     document.querySelectorAll('.orbit-node').forEach(n => n.classList.toggle('sel', n.dataset.id === id));
   }
-  const LINES = { fracture: ['Pelvic fracture', 'planning'], landmarks: ['Anatomical', 'landmarking'], align: ['Scan', 'alignment'], spine: ['Spine'], ribs: ['Rib', 'labelling'], teeth: ['Teeth and', 'orthodontics'], cranial: ['Cranial', 'implants'], cleft: ['Cleft care'], jaw: ['Jaw', 'reconstruction'], joint: ['Joint', 'replacement'], vascular: ['Vascular', 'devices'], ear: ['Ear', 'reconstruction'], ortho: ['Braces and', 'prosthetics'] };
+  const LINES = { fracture: ['Pelvic fracture', 'planning'], landmarks: ['Anatomical', 'landmarking'], align: ['Scan', 'alignment'], spine: ['Spine'], ribs: ['Rib', 'labelling'], teeth: ['Teeth and', 'orthodontics'], cranial: ['Cranial', 'implants'], stress: ['Bone stress', 'and loads'], cleft: ['Cleft care'], jaw: ['Jaw', 'reconstruction'], joint: ['Joint', 'replacement'], vascular: ['Vascular', 'devices'], ear: ['Ear', 'reconstruction'], ortho: ['Braces and', 'prosthetics'] };
   mount('c-orbit', (host, w) => {
     if (w < 500) { host.classList.add('compact'); return; }
     host.classList.remove('compact');
